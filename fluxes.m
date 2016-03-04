@@ -1,4 +1,4 @@
-function d = flux(t, EVHR, simu)
+function d = fluxes(t, EVHR, simu)
   %---------------------------------------------------------------
   % Define differential equations of the state variables
   %  
@@ -37,56 +37,43 @@ function d = flux(t, EVHR, simu)
   
   % read parameter values
   par = simu.par;
-  T1 = par(1);    % K, Reference temperature ; 
-  TA = par(2);    % K, Arrhenius temperature ;
-  kap_X = par(4); % -, digestion efficiency of food to reserve
-  p_Am = par(5);  % J/cm^2/d, maximum surface-specific assimilation rate
-  v = par(6);      % cm/d, energy conductance
-  kap = par(7);    % -, allocation fraction to soma = growth + somatic maintenance
-  p_M = par(9);    % J/d.cm^3, [p_M], vol-specific somatic maintenance
-  p_T = par(10);   % J/d.cm^2, {p_T}, surface-specific som maintenance
-  k_J = par(11);   % 1/d, maturity maint rate coefficient
-  E_G = par(12);   % J/cm^3, [E_G], spec cost for structure
-  E_Hb = par(13);  % J, E_H^b, maturity at birth
-  E_Hp = par(14);  % J, E_H^p, maturity at puberty
-  K = par(22);     % same unit as food, half saturation constant
   
   % scaled functional response
-  f = X/ (X + K); % -,   scaled functional response
+  f = X/ (X + par.K); % -,   scaled functional response
   
   % simplest temperature correction function, 
   % see Kooijman 2010 for more detailed formulation (e.g. p. 21)
-  c_T = exp(TA/ T1 - TA/ T) ;
-  p_AmT = c_T * p_Am ;
-  v_T = c_T * v; % 
-  p_MT = c_T * p_M;
-  p_TT = c_T * p_T; % 
-  k_JT = c_T * k_J; 
-  p_XmT = p_AmT / kap_X;
+  c_T = exp(par.TA/ par.T1 - par.TA/ T) ;
+  p_AmT = c_T * par.p_Am ;
+  v_T = c_T * par.v; % 
+  p_MT = c_T * par.p_M;
+  p_TT = c_T * par.p_T; % 
+  k_JT = c_T * par.k_J; 
+  p_XmT = p_AmT / par.kap_X;
   
   % Fluxes
-  if E_H < E_Hb
+  if E_H < par.E_Hb
       pX = 0;% embryo stage
   else
       pX = f * p_XmT * V^(2/3);
   end
   
-  pA = kap_X * pX;
+  pA = par.kap_X * pX;
   pM = p_MT * V;
   pT = p_TT * V^(2/3);
   pS = pM + pT;
-  pC = (E/V) * (E_G * v_T * V^(2/3) + pS ) / (kap * E/V + E_G ); %eq. 2.12 p.37 Kooijman 2010
+  pC = (E/V) * (par.E_G * v_T * V^(2/3) + pS ) / (par.kap * E/V + par.E_G ); %eq. 2.12 p.37 Kooijman 2010
   pJ = k_JT * E_H;
   
   % Differential equations
   dE = pA - pC; % dE/dt
-  dV = (kap * pC - pS) / E_G;% dV/dt
-  if E_H < E_Hp
-      dH = (1 - kap) * pC - pJ; % dEH/dt
+  dV = (par.kap * pC - pS) / par.E_G;% dV/dt
+  if E_H < par.E_Hp
+      dH = (1 - par.kap) * pC - pJ; % dEH/dt
       dR = 0; % dER/dt
   else
       dH = 0;
-      dR = (1 - kap) * pC - pJ;
+      dR = (1 - par.kap) * pC - pJ;
   end
   
   d = [dE; dV; dH; dR]; 

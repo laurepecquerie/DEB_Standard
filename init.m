@@ -48,7 +48,7 @@ function simu = init
   simu.envT = envT;
   simu.envX = envX;
   simu.Tinit = T;
-  simu.Xinit = f.* simu.par(22) ./ (1 - f);
+  simu.Xinit = f.* simu.par.K ./ (1 - f);
   simu.EVHR_init = [E_0 ; V_0 ; E_H0; E_R0];
   simu.col = col;
   

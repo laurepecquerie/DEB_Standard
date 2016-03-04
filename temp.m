@@ -1,9 +1,9 @@
 function T = temp(t)
 %---------------------------------------------------------------
   % Determine temperature at time t, 
-  % Here we compute it as a sinus function that is ajusted
-  % to the temperature cycle (water column) in the Bay of Biscay (Pecquerie et al. 2009)
-  %  
+  % Here we compute it as a sinus function to simulate a seasonal
+  % temperature cycle
+  %
   % t : scalar or n-vector of time points
   %
   % T : scalar or n-vector with temperature

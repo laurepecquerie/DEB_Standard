@@ -1,9 +1,8 @@
 function get_plots(simu)
 
   par = simu.par; % parameters
-  E_Hp = par(14);
-  K = par(22); 
-  Em = par(5) / par(6); % J/cm^3  [Em] = pAm / v
+ 
+  Em = par.p_Am / par.v; % J/cm^3  [Em] = pAm / v
 
   % time , environmental forcing
   t = simu.tEVHR(:,1);
@@ -21,7 +20,7 @@ function get_plots(simu)
           T = temp(t) - 273;  
   end
   
-  f = X ./ (X + K); %scaled functional response
+  f = X ./ (X + par.K); %scaled functional response
   
   % state variables
   E = simu.tEVHR(:,2);
@@ -32,7 +31,7 @@ function get_plots(simu)
   sc_res_dens = E ./ ( V * Em); % -, scaled reserve density e
   
   % spawning date indices
-  i_sp = find(and((E_R == 0),(E_H>=E_Hp)));
+  i_sp = find(and((E_R == 0),(E_H>=par.E_Hp)));
   i_sp = i_sp - 1 ; % look at the preceding line with E_R value before spawning
   
    

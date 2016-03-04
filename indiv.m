@@ -33,10 +33,10 @@ function tEVHR = indiv(simu)
       end
       
       t = [tc:tnext]'; 
-      [t, EVHR] = ode23s(@(t, EVHR)flux(t, EVHR, simu), t, EVHR_tc); % integrate
+      [t, EVHR] = ode23s(@(t, EVHR)fluxes(t, EVHR, simu), t, EVHR_tc); % integrate
       tEVHR = [tEVHR; [t, EVHR]]; % append to output
       E_Hc = EVHR(end,3);
-      if E_Hc >= par(14) %; E_Hp
+      if E_Hc >= par.E_Hp 
           EVHR(end,4) = 0;
       end
 
